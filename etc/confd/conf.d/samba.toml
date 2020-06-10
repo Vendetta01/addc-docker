@@ -1,0 +1,13 @@
+[template]
+src = "smb.conf.tmpl"
+dest = "/etc/samba/smb.conf"
+keys = [
+    "/conf/samba/realm",
+    "/conf/samba/domain",
+    "/conf/samba/adminpass",
+    "/conf/samba/tls_keyfile_url",
+    "/conf/samba/tls_certfile_url",
+    "/conf/confd/client_cakeys",
+]
+reload_cmd = "supervisorctl restart samba"
+

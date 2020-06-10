@@ -1,0 +1,171 @@
+# Environment variables to set for Paperless
+# Commented out variables will be replaced with a default within Paperless.
+#
+# In addition to what you see here, you can also define any values you find in
+# paperless.conf.example here.  Values like:
+#
+# * PAPERLESS_PASSPHRASE
+# * PAPERLESS_CONSUMPTION_DIR
+# * PAPERLESS_CONSUME_MAIL_HOST
+#
+# ...are all explained in that file but can be defined here, since the Docker
+# installation doesn't make use of paperless.conf.
+
+{{- $key := "/conf/paperless/passphrase"}}
+{{- if exists $key}}
+PAPERLESS_PASSPHRASE={{getv $key}}
+{{- end}}
+
+{{- $key := "/conf/paperless/secret_key"}}
+{{- if exists $key}}
+PAPERLESS_SECRET_KEY={{getv $key}}
+{{- end}}
+
+{{- $key := "/conf/paperless/consumer_loop_time"}}
+{{- if exists $key}}
+PAPERLESS_CONSUMER_LOOP_TIME={{getv $key}}
+{{- end}}
+
+{{- $key := "/conf/paperless/time_zone"}}
+{{- if exists $key}}
+PAPERLESS_TIME_ZONE={{getv $key}}
+{{- end}}
+
+# The amount of threads to use for text recognition
+# PAPERLESS_OCR_THREADS=4
+{{- $key := "/conf/paperless/ocr_threads"}}
+{{- if exists $key}}
+PAPERLESS_OCR_THREADS={{getv $key}}
+{{- end}}
+
+
+
+# Additional languages to install for text recognition.  Note that this is
+# different from PAPERLESS_OCR_LANGUAGE (default=eng), which defines the
+# default language used when guessing the language from the OCR output.
+# PAPERLESS_OCR_LANGUAGES=deu ita
+{{- $key := "/conf/paperless/ocr_languages"}}
+{{- if exists $key}}
+PAPERLESS_OCR_LANGUAGES={{getv $key}}
+{{- end}}
+
+# You can change the default user and group id to a custom one
+# USERMAP_UID=1000
+# USERMAP_GID=1000
+{{- $key := "/conf/paperless/usermap_uid"}}
+{{- if exists $key}}
+USERMAP_UID={{getv $key}}
+{{- end}}
+{{- $key := "/conf/paperless/usermap_gid"}}
+{{- if exists $key}}
+USERMAP_GID={{getv $key}}
+{{- end}}
+
+# Software tweaks
+{{- $key := "/conf/paperless/pre_consume_script"}}
+{{- if exists $key}}
+PAPERLESS_PRE_CONSUME_SCRIPT={{getv $key}}
+{{- end}}
+
+{{- $key := "/conf/paperless/inline_doc"}}
+{{- if exists $key}}
+  {{- if getv $key | parseBool}}
+PAPERLESS_INLINE_DOC=True
+  {{- end}}
+{{- end}}
+
+{{- $key := "/conf/paperless/filename_date_order"}}
+{{- if exists $key}}
+PAPERLESS_FILENAME_DATE_ORDER={{getv $key}}
+{{- end}}
+
+
+# LDAP options
+# Uncomment the following line to enable ldap authetication
+#PAPERLESS_USE_LDAP=True
+{{- $key := "/conf/paperless/use_ldap"}}
+{{- if exists $key}}
+    {{- if getv $key | parseBool}}
+PAPERLESS_USE_LDAP=True
+    {{- end}}
+{{end}}
+
+# Baseline configuration
+{{- $key := "/conf/ldap/uri"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_SERVER_URI={{getv $key}}
+{{- end}}
+
+{{- $key := "/conf/ldap/user_auth_dn"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_BIND_DN={{getv $key}}
+{{- end}}
+
+{{- $key := "/conf/ldap/user_auth_pw"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_BIND_PASSWORD={{getv $key}}
+{{- end}}
+
+# Enable debug (default false)
+#PAPERLESS_AUTH_LDAP_DEBUG=False
+{{- $key := "/conf/paperless/auth_ldap_debug"}}
+{{- if exists $key}}
+    {{- if getv $key | parseBool}}
+PAPERLESS_AUTH_LDAP_DEBUG=True
+    {{- end}}
+{{end}}
+
+# User search filter. Set ...USER_DN to where your user accounts are stored
+# and set ...USER_SEARCH_FILTER to the field which matches the user name
+# given on django login
+#PAPERLESS_AUTH_LDAP_USER_DN=ou=people,dc=example,dc=org
+#PAPERLESS_AUTH_LDAP_USER_SEARCH_FILTER=(uid=%(user)s)
+{{- $key := "/conf/paperless/auth_ldap_user_dn"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_USER_DN={{getv $key}}
+{{- end}}
+
+# Group search filter. Same as for users but ...GROUP_TYPE has to match
+# the ...GROUP_SEARCH_FILTER. For now only groupofnames is implemented.
+#PAPERLESS_AUTH_LDAP_GROUP_DN=ou=groups,dc=example,dc=org
+#PAPERLESS_AUTH_LDAP_GROUP_SEARCH_FILTER=(objectClass=groupOfNames)
+#PAPERLESS_AUTH_LDAP_GROUP_TYPE=groupOfNames
+{{- $key := "/conf/paperless/auth_ldap_group_dn"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_GROUP_DN={{getv $key}}
+{{- end}}
+
+
+# Get user account permissions from groups. Since paperless uses the admin
+# interface, all users need the superuser (su) permission.
+# Only relevant for multi user setup and if paperless stops using the admin
+# interface.
+#PAPERLESS_AUTH_LDAP_GROUP_DN_ACTIVE=cn=django_active,ou=groups,dc=example,dc=org
+#PAPERLESS_AUTH_LDAP_GROUP_DN_STAFF=cn=django_staff,ou=groups,dc=example,dc=org
+#PAPERLESS_AUTH_LDAP_GROUP_DN_SU=cn=django_su,ou=groups,dc=example,dc=org
+{{- $key := "/conf/paperless/auth_ldap_group_dn_active"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_GROUP_DN_ACTIVE={{getv $key}}
+PAPERLESS_AUTH_LDAP_GROUP_DN_STAFF={{getv $key}}
+PAPERLESS_AUTH_LDAP_GROUP_DN_SU={{getv $key}}
+{{- end}}
+
+
+# Use StartTLS (default False)
+#PAPERLESS_AUTH_LDAP_START_TLS=False
+
+# Simple access permissions through require and deny groups. All users
+# in require have access, all users in deny are not allowed access.
+# Only relevant for multi user setup.
+#PAPERLESS_AUTH_LDAP_REQUIRE_GROUP=cn=django_required,ou=groups,dc=example,dc=org
+#PAPERLESS_AUTH_LDAP_DENY_GROUP=cn=django_deny,ou=groups,dc=example,dc=org
+{{- $key := "/conf/paperless/auth_ldap_require_group"}}
+{{- if exists $key}}
+PAPERLESS_AUTH_LDAP_REQUIRE_GROUP={{getv $key}}
+{{- end}}
+
+# Cache distinguished names and group memberships for this amount of time
+# to reduce LDAP traffic. Default is 0 (do not cache at all).
+#PAPERLESS_AUTH_LDAP_CACHE_TIMEOUT=0
+
+
